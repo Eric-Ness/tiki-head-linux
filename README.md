@@ -1,115 +1,46 @@
-# Make your own Linux distro
+# Tiki Head Linux
 
-This template builds a live Linux distro from one short file,
-[`linuxlive.yaml`](linuxlive.yaml). Pick Ubuntu or Fedora, a desktop, some
-apps and your own wallpaper and logo. GitHub Actions then builds an ISO that
-boots from a USB stick or in a virtual machine, on BIOS and UEFI PCs with
-Secure Boot on. Each build is booted five ways and checked before you
-download it.
+A geospatial workstation that starts from a USB stick and installs to a disk:
+Ubuntu 26.04 LTS with GNOME, made with [linuxlive](https://linuxlive.com).
 
-You need a GitHub account and nothing else: no Linux, no installs.
+![The Tiki Head desktop](assets/wallpaper.png)
 
-## 1. Make your copy
+## What is inside
 
-Click **Use this template** → **Create a new repository**, give it a name,
-and create it.
+- **Desktop GIS:** QGIS, with GRASS and SAGA in its Processing toolbox.
+- **The command line:** GDAL/OGR, PROJ, SpatiaLite, osmium (OpenStreetMap),
+  gpsbabel (GPS tracks), NetCDF tools, and
+  [tippecanoe](https://github.com/felt/tippecanoe) for vector tiles, built in
+  from source at a pinned commit.
+- **A spatial database:** PostgreSQL with PostGIS. On an installed computer,
+  each person gets a database of their own name with PostGIS in it.
+- **Python:** GeoPandas, Rasterio, Shapely, PyProj, Fiona, xarray, Folium and
+  SciPy, with IPython and Jupyter Notebook.
+- **Maps and OpenStreetMap:** JOSM and GNOME Maps.
+- **Apps from Flathub:** Firefox, LibreOffice, Inkscape (map finishing), GIMP
+  and Visual Studio Code.
+- **Sample data:** Natural Earth's world at 1:50 million (public domain) as one
+  GeoPackage, and a QGIS project that opens it, in `~/GIS` for everyone.
+- **`tiki-head-gis`:** lists the tools and their versions; `tiki-head-gis
+  sample` opens the sample map.
 
-Keep it **public**. Builds are free in public repositories and the ISO can be
-downloaded. A private repository works too, but builds use your account's
-Actions minutes, and GitHub Free's artifact storage (500 MB) is too small to
-hold an ISO.
+## How it is put together
 
-GitHub may start a build of the unchanged example straight away. Let it run,
-or cancel it from the **Actions** tab.
+Everything is in [linuxlive.yaml](linuxlive.yaml):
 
-## 2. Describe your distro
+| File | When it runs | What it does |
+| --- | --- | --- |
+| [scripts/build.sh](scripts/build.sh) | while the image is built | downloads the sample data, makes the QGIS project, puts the GIS tools in GNOME's dock, dark style |
+| [scripts/first-boot.sh](scripts/first-boot.sh) | once, on an installed computer | starts PostgreSQL and makes a PostGIS database for each person |
+| [scripts/first-login.sh](scripts/first-login.sh) | once for each person | makes `~/GIS` with the sample data, the project and the guide |
+| [files/](files/) | copied in | the guide, the login message and `tiki-head-gis` |
 
-Open `linuxlive.yaml` and click the pencil to edit it in your browser:
+Every push builds the ISO in GitHub Actions, boots it five ways, installs it to
+a disk and checks every package, file and script above. Download it from the
+run's Artifacts.
 
-```yaml
-schema_version: 1
-name: My Distro
-version: "0.1"
-base: ubuntu
-desktop: cinnamon
-apps:
-  - firefox
-  - vlc
-branding:
-  wallpaper: assets/wallpaper.png
-  logo: assets/logo.png
-  accent_color: "#c2185b"
-```
+## Credits
 
-- `base`: `ubuntu` (Ubuntu 26.04 LTS) or `fedora` (Fedora 44).
-- `desktop`: `gnome`, `kde` or `cinnamon`.
-- `apps`: any of the 20 apps in the
-  [Apps table](https://github.com/Eric-Ness/linuxlive/wiki/Writing-a-Spec#apps),
-  such as `libreoffice`, `gimp`, `steam` or `gcompris`.
-- Keep the quotes around `version` and `accent_color`.
-
-[Writing a Spec](https://github.com/Eric-Ness/linuxlive/wiki/Writing-a-Spec)
-explains every option.
-
-## 3. Add your art
-
-Replace the two images in [`assets/`](assets), keeping their names. In the
-`assets` folder, choose **Add file** → **Upload files**.
-
-- `wallpaper.png`: a PNG of at least 1280×720 with **one strong colour**,
-  such as grass, sky or a bold gradient. The build checks that your
-  wallpaper's colour really shows on the desktop, so a mostly grey, black or
-  white picture fails that check. Save it as an ordinary 8-bit PNG, not
-  16-bit or interlaced.
-- `logo.png`: a square PNG of exactly 128, 256 or 512 pixels. It appears on
-  the boot screen, in About screens and, on Cinnamon, as the menu button.
-
-## 4. Build it
-
-Commit your changes to `main`. That starts a build. Watch it in the
-**Actions** tab, where it takes about 20 minutes for Ubuntu and 40 for Fedora.
-To build again without changing anything, choose **Actions** → **build** →
-**Run workflow**.
-
-## 5. Download and boot it
-
-Open the finished run and scroll to **Artifacts**. Download
-**iso-my-distro**, which is named after your distro. It's a zip with the ISO
-and its SHA-256 checksum, and it's kept for 7 days. The run's summary shows
-every check that passed.
-
-Then try it in VirtualBox, or write it to a USB stick of 8 GB or more with
-Rufus (DD mode), Fedora Media Writer or balenaEtcher.
-[Testing and Booting](https://github.com/Eric-Ness/linuxlive/wiki/Testing-and-Booting)
-covers checksums, VirtualBox settings, USB writers and boot keys.
-
-## If the build fails
-
-Open the failed step to see why.
-
-- **Check the spec**: the message names the problem, for example a missing
-  quote or an unknown app.
-- **Verify**: one of the checks on the booted system failed. If it's about
-  the wallpaper's colour, use a more colourful PNG.
-
-Anything else: [open an issue](https://github.com/Eric-Ness/linuxlive/issues)
-with a link to your run.
-
-## Good to know
-
-- The ISO runs live (nothing is saved when you shut down) and can install
-  itself: the "Install" desktop icon or boot-menu entry erases one whole disk
-  and installs your distro. Fedora-based distros install from the system
-  image each build publishes to this repository's packages, so installing
-  them needs the internet, and installed systems update from it. See
-  [Known Limitations](https://github.com/Eric-Ness/linuxlive/wiki/Known-Limitations).
-- Your spec can also add packages, files, your own scripts (run while the
-  image is built, at an installed computer's first start, or at each user's
-  first login) and code from GitHub. Put scripts in `scripts/` and files in
-  `files/`; see
-  [Writing a Spec: Extras](https://github.com/Eric-Ness/linuxlive/wiki/Writing-a-Spec#extras-your-own-packages-files-scripts-and-code).
-- Builds use [linuxlive](https://github.com/Eric-Ness/linuxlive) v0.4.1. To
-  move to a newer release, change `@v0.4.1` in
-  [`.github/workflows/build.yml`](.github/workflows/build.yml).
-- This template is under the MIT No Attribution licence, so your distro's
-  files are yours to license however you like. linuxlive itself is GPL-3.0.
+Wallpaper and logo drawn in code for Tiki Head Linux, CC0. Sample data from
+[Natural Earth](https://www.naturalearthdata.com/), public domain. Not made or
+endorsed by Canonical.
