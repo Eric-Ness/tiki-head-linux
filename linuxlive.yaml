@@ -1,42 +1,32 @@
-# Tiki Head Linux: a geospatial workstation that boots from a USB stick.
-# QGIS, GRASS and SAGA for analysis, GDAL and PROJ on the command line,
-# PostGIS on every installed computer, Python's geospatial stack with
-# Jupyter, tippecanoe for vector tiles, OpenStreetMap editing in JOSM, and
-# Natural Earth sample data ready to open on the first day.
+# Tiki Head Linux, made with the linuxlive.com wizard on 2026-10-15.
+# Build it in your own GitHub from https://github.com/Eric-Ness/linuxlive-distro (see README.md)
 schema_version: 1
-name: Tiki Head Linux
-version: "1.0"
+name: "Tiki Head Linux"
+version: "0.1"
 base: ubuntu
 desktop: gnome
 apps:
-  - firefox
-  - libreoffice
-  - inkscape
-  - gimp
   - vscode
+  - chromium
+  - firefox
 branding:
-  wallpaper: assets/wallpaper.png
+  wallpaper: assets/wallpaper.jpg
   logo: assets/logo.png
-  accent_color: "#d9822b"
-
-# The GIS toolbox, from Ubuntu's own archive.
+  accent_color: "#e0661f"
+# Your own additions. Scripts and repos run as root; read them before you share the distro.
 packages:
-  # Desktop GIS, and the analysis engines QGIS uses.
   - qgis
   - qgis-plugin-grass
   - grass
   - saga
-  # The command line: GDAL/OGR, PROJ, SpatiaLite, OpenStreetMap and GPS data.
   - gdal-bin
   - proj-bin
   - spatialite-bin
   - spatialite-gui
   - osmium-tool
   - gpsbabel
-  # A spatial database: PostgreSQL with PostGIS (set up at first boot).
   - postgresql
   - postgis
-  # Python's geospatial stack, with Jupyter to work in.
   - python3-gdal
   - python3-geopandas
   - python3-rasterio
@@ -52,33 +42,15 @@ packages:
   - ipython3
   - jupyter-notebook
   - netcdf-bin
-  # Maps and OpenStreetMap editing.
   - josm
   - gnome-maps
-  # What tippecanoe (below) needs to build.
   - build-essential
   - libsqlite3-dev
   - zlib1g-dev
-
-files:
-  - src: files/README.md
-    dest: /usr/share/tiki-head/README.md
-  - src: files/motd
-    dest: /etc/motd
-  - src: files/tiki-head-gis
-    dest: /usr/bin/tiki-head-gis
-    mode: "0755"
-
 scripts:
   build:
-    - scripts/build.sh        # sample data, GNOME's dock and dark style
+    - scripts/build.sh
   first-boot:
-    - scripts/first-boot.sh   # PostGIS, with a database for each person
+    - scripts/first-boot.sh
   first-login:
-    - scripts/first-login.sh  # a GIS folder with the sample data and the guide
-
-repos:
-  # tippecanoe: vector tiles from GeoJSON, for web maps (BSD-2-Clause).
-  - url: https://github.com/felt/tippecanoe
-    commit: 68ab8dcc229f95b8b25877697d5e8d66783af503
-    run: make -j"$(nproc)" && make install PREFIX=/usr
+    - scripts/first-login.sh
