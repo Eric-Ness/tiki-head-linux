@@ -41,6 +41,8 @@ run's Artifacts.
 
 ## Credits
 
-Wallpaper and logo drawn in code for Tiki Head Linux, CC0. Sample data from
+Wallpaper and logo drawn in code for Tiki Head Linux, CC0. The islands come
+from real elevation data: the Terrain Tiles on AWS Open Data (USGS on land,
+NOAA ETOPO1 at sea, both public domain). Sample data from
 [Natural Earth](https://www.naturalearthdata.com/), public domain. Not made or
 endorsed by Canonical.
