@@ -47,6 +47,8 @@ packages:
   - build-essential
   - libsqlite3-dev
   - zlib1g-dev
+  - curl
+  - ca-certificates
 scripts:
   build:
     - scripts/build.sh
