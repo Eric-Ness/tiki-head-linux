@@ -10,7 +10,7 @@ apps:
   - chromium
   - firefox
 branding:
-  wallpaper: assets/wallpaper.jpg
+  wallpaper: assets/wallpaper.png
   logo: assets/logo.png
   accent_color: "#e0661f"
 # Your own additions. Scripts and repos run as root; read them before you share the distro.
