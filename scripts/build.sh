@@ -22,10 +22,12 @@ rm -rf "$work"
 ogrinfo -so "$gpkg" | sed -n 's/^[0-9]*: /  layer: /p'
 
 # 2. A QGIS project for the sample data. QGIS runs without a screen here; if
-# it cannot, the data is still there to open by hand.
+# it cannot, the data is still there to open by hand. The project keeps
+# absolute paths: first-login.sh copies it to ~/GIS/Projects, away from the
+# GeoPackage, and relative ones would point at ~/GIS/Projects/natural-earth.gpkg.
 QT_QPA_PLATFORM=offscreen python3 - "$gpkg" "$data/world.qgz" <<'PY' || echo "Tiki Head: no sample QGIS project (the data is still in $gpkg)"
 import sys
-from qgis.core import QgsApplication, QgsProject, QgsVectorLayer
+from qgis.core import Qgis, QgsApplication, QgsProject, QgsVectorLayer
 from qgis.PyQt.QtGui import QColor
 
 gpkg, out = sys.argv[1], sys.argv[2]
@@ -34,6 +36,7 @@ app.initQgis()
 project = QgsProject.instance()
 project.setTitle("Tiki Head: the world at 1:50 million")
 project.setBackgroundColor(QColor("#cfe5ea"))
+project.setFilePathStorage(Qgis.FilePathType.Absolute)
 # Bottom to top; each one gets a chart's colours.
 for layer, title, colour in [
     ("admin_0_countries", "Countries", "#efe6cc"),
