@@ -27,18 +27,15 @@ Ubuntu 26.04 LTS with GNOME, made with [linuxlive](https://linuxlive.com).
 
 ## How it is put together
 
-[linuxlive.yaml](linuxlive.yaml) lists the packages, the Flathub apps and three
-scripts:
+[linuxlive.yaml](linuxlive.yaml) lists the packages, the Flathub apps, three
+files and three scripts:
 
 | File | When it runs | What it does |
 | --- | --- | --- |
-| [scripts/build.sh](scripts/build.sh) | while the image is built | writes the guide, the login message and `tiki-head-gis`; downloads the sample data, makes the QGIS project, puts the GIS tools in GNOME's dock, dark style |
+| [files/](files/) | copied in | the guide (`/usr/share/tiki-head/README.md`), the login message (`/etc/motd`) and `tiki-head-gis` (`/usr/bin`) |
+| [scripts/build.sh](scripts/build.sh) | while the image is built | downloads the sample data, makes the QGIS project, puts the GIS tools in GNOME's dock, dark style |
 | [scripts/first-boot.sh](scripts/first-boot.sh) | once, on an installed computer | starts PostgreSQL and makes a PostGIS database for each person |
 | [scripts/first-login.sh](scripts/first-login.sh) | once for each person | makes `~/GIS` with the sample data, the project and the guide |
-
-[files/](files/) holds the guide, the login message and `tiki-head-gis` as
-readable files. The build does not copy them: build.sh writes its own copy of
-each, so change a file there and in build.sh together.
 
 Every push builds the ISO in GitHub Actions, boots it five ways, installs it to
 a disk and checks every package, file and script above. Download it from the
