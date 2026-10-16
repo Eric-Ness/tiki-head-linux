@@ -1,5 +1,6 @@
 # Builds linuxlive.yaml into a live ISO, boots it five ways in QEMU and checks
-# it against the spec. Runs on every push to main, and by hand from the Actions
+# it against the spec. Runs on every push to main, once a month (so the ISO
+# gets the newest packages and security fixes), and by hand from the Actions
 # tab (Run workflow). Download the ISO from the finished run's Artifacts.
 #
 # To build with a newer linuxlive release, change @v0.4.2 below.
@@ -9,6 +10,11 @@ on:
   push:
     branches: [main]
     paths-ignore: [README.md]
+  # Monthly rebuild: the 7th at 06:41 UTC. GitHub pauses it after 60 days
+  # without a commit: Enable workflow in the Actions tab, or Rebuild now on
+  # linuxlive.com's My distros page, turns it back on.
+  schedule:
+    - cron: "41 6 7 * *"
   workflow_dispatch:
 
 permissions:
