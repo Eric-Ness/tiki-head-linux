@@ -1,5 +1,7 @@
 # Tiki Head Linux
 
+[![Built with linuxlive](https://linuxlive.com/badge.svg)](https://linuxlive.com/library/tiki-head-linux/)
+
 A geospatial workstation that starts from a USB stick and installs to a disk:
 Ubuntu 26.04 LTS with GNOME, made with [linuxlive](https://linuxlive.com).
 
